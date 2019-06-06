@@ -1,5 +1,6 @@
 const express = require('express');
 
+const recipeRouter = require('./data/routers/recipeRouter');
 //routers
 
 const server = express();
@@ -10,5 +11,7 @@ server.get('/', (req, res) => {
 });
 
 // server.use routers
+
+server.use('/api/', recipeRouter);
 
 module.exports = server;
