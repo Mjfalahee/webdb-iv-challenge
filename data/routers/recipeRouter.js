@@ -42,13 +42,14 @@ router.post('/dishes', async (req, res) => {
 router.get('/dishes/:id', async (req, res) => {
     try {
         const dish = await db.getDish(req.params.id);
-        //const recipe = await db.getRecipesByDishId(req.params.id);
-        //console.log(dish);
-        //console.log(recipe);
+        // const recipe = await db.getRecipesByDishId(req.params.id);
         // obj = {
-        //     name: dish,
-        //     recipes: recipe
+        //     name: dish[0].name,
+        //     recipes: recipe.map(entry => {
+        //         return entry.name;
+        //     })
         // }
+
         res.status(200).json(dish);
     }
     catch (error) {

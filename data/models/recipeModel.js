@@ -28,12 +28,19 @@ function getRecipesByDishId(id) {
 }
 
 //should return the dish with the provided id, and include a list of the related recipes.
-function getDish(id) {
-    return db
+async function getDish(id) {
+    let dish = await db
         .select(['dishes.name'])
         .from('dishes')
         .where('dishes.id', id)
-        // .then(getRecipesByDishId(id));
+        .first()
+    let recipes = await getRecipesByDishId(id)
+    return {
+        ...dish,
+        recipes: recipes.map(recipe => {
+            return recipe.name;
+        })
+    }
 };
 
 //should return a list of all recipes in the database, including the dish they belong to.
@@ -54,3 +61,15 @@ function addRecipe(recipe) {
 function getShoppingList(id) {
 
 }
+
+
+// let dish = getDishbyId(id);
+//     let result = getRecipesByDishId(id);
+//     let obj = {
+//         name: dish[0].name,
+//         recipes: result.map(x => {
+//             return x.name;
+//         })
+//     }
+
+//     return obj;
