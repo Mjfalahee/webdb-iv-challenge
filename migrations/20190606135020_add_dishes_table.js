@@ -37,6 +37,9 @@ exports.up = function(knex, Promise) {
         tbl
             .string('name', 128)
             .notNullable();
+        tbl
+            .string('units', 128)
+            .notNullable();
     })
     .createTable('recipe_ingredients', tbl => {
         tbl.increments();

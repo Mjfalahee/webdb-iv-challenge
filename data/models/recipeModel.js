@@ -1,4 +1,5 @@
 const db = require('../dbConfig');
+const knex = require('knex');
 
 module.exports = {
     getDishes,
@@ -6,7 +7,8 @@ module.exports = {
     getDish,
     getRecipes,
     addRecipe,
-    getRecipesByDishId
+    getRecipesByDishId,
+    getRecipe
 }
 
 //should return a list of all dishes in the database.
@@ -34,10 +36,10 @@ async function getDish(id) {
         .from('dishes')
         .where('dishes.id', id)
         .first()
-    let recipes = await getRecipesByDishId(id)
+    let result = await getRecipesByDishId(id)
     return {
         ...dish,
-        recipes: recipes.map(recipe => {
+        recipes: result.map(recipe => {
             return recipe.name;
         })
     }
@@ -46,7 +48,7 @@ async function getDish(id) {
 //should return a list of all recipes in the database, including the dish they belong to.
 function getRecipes() {
     return db
-        .select(['recipes.name', 'dishes.name as dish'])
+        .select(['recipes.id', 'recipes.name', 'dishes.name as dish'])
         .from('recipes')
         .join('dishes', 'dishes.id', 'recipes.dish_id')
 };
@@ -57,19 +59,49 @@ function addRecipe(recipe) {
         .insert(recipe);
 };
 
+
+//should return the recipe with the provided id. The recipe should include -- name of the dish, name of the recipe, list of ingredients with quantity.
+function getRecipe(id) {
+   return db
+        .select(['recipes.name as recipe', 'dishes.name as dish', knex.raw("GROUP_CONCAT(ingredients.name) as ingredients")])
+        .from('recipes')
+        .join('recipe_ingredients', 'recipes.id', 'recipe_ingredients.recipe_id')
+        .join('ingredients', 'recipe_ingredients.ingredient_id', 'ingredients.id')
+        .join('dishes', 'recipes.dish_id', 'dishes.id')
+        .where('recipes.id', id)
+}
+
 //takes a recipe id, and gives a list of ingredients and their quantities to buy
 function getShoppingList(id) {
 
 }
 
 
-// let dish = getDishbyId(id);
-//     let result = getRecipesByDishId(id);
-//     let obj = {
-//         name: dish[0].name,
-//         recipes: result.map(x => {
-//             return x.name;
-//         })
-//     }
+  // let rec = await db
+    //             .select(['recipes.name as recipe', 'recipe_ingredients.amount'])
+    //             .from('recipe_ingredients')
+    //             .join('recipes', 'recipes.id', 'recipe_ingredients.recipe_id')
+    //             .where('recipes.id', id)
 
-//     return obj;
+    // let ingres = await db
+    //             .select(['ingredients.name as ingredient', 'ingredients.units'])
+    //             .from('recipe_ingredients')
+    //             .join('ingredients', 'ingredients.id', 'recipe_ingredients.ingredient_id')
+    //             .where('recipe_ingredients.recipe_id', id)
+
+    // let dish = await db
+    //             .select(['dishes.name as dish'])
+    //             .from('recipes')
+    //             .join('dishes', 'dishes.id', 'recipes.dish_id')
+    //             .where('recipes.id', id)
+
+    // return {
+    //     recipe: rec.recipe,
+    //     dish: dish.dish,
+    //     ingredients: ingres.map(ingredient => {
+    //         return ingredient.ingredient;
+    //     }),
+    //     amounts: recipe.map(recipe => {
+    //         return recipe_ingredients.amount;
+    //     })
+    // }

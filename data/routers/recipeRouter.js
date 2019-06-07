@@ -37,19 +37,11 @@ router.post('/dishes', async (req, res) => {
     }
 })
 
-//get dish by id
+//get dish by id == working
 
 router.get('/dishes/:id', async (req, res) => {
     try {
         const dish = await db.getDish(req.params.id);
-        // const recipe = await db.getRecipesByDishId(req.params.id);
-        // obj = {
-        //     name: dish[0].name,
-        //     recipes: recipe.map(entry => {
-        //         return entry.name;
-        //     })
-        // }
-
         res.status(200).json(dish);
     }
     catch (error) {
@@ -78,6 +70,16 @@ router.post('/recipes', async (req, res) => {
     }
     catch (error) {
         sendError(500, 'Error adding the recipe to the database.');
+    }
+})
+
+router.get('/recipes/:id', async (req, res) => {
+    try {
+        const recipe = await db.getRecipe(req.params.id);
+        res.status(200).json(recipe);
+    }
+    catch (error) {
+        res.status(500).json({message: 'Something went wrong getting the recipe.'})
     }
 })
 

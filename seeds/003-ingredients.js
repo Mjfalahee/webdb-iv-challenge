@@ -5,11 +5,11 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('ingredients').insert([
-        {name: 'Pineapple'},
-        {name: 'Pepperoni'},
-        {name: 'Meat'},
-        {name: 'Cheese'},
-        {name: 'Butter'}
+        {name: 'Pineapple', units: 'bits'},
+        {name: 'Pepperoni', units: 'pieces'},
+        {name: 'Meat', units: 'lbs'},
+        {name: 'Cheese', units: 'oz'},
+        {name: 'Butter', units: 'sticks'}
       ]);
     });
 };
