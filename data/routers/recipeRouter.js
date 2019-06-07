@@ -52,13 +52,33 @@ router.get('/dishes/:id', async (req, res) => {
         res.status(200).json(dish);
     }
     catch (error) {
-        sendError(500, 'Error getting the Dish.')
+        sendError(500, 'Error getting the Dish.');
     }
 })
 
-//get recipes
+//get recipes == works
 
-//add recipes
+router.get('/recipes', async (req, res) => {
+    try {
+        const recipes = await db.getRecipes();
+        res.status(200).json(recipes);
+    }
+    catch (error) {
+        sendError(500, 'Error retrieving recipes.');
+    }
+})
+
+//add recipes == works
+
+router.post('/recipes', async (req, res) => {
+    try {
+        const recipe = await db.addRecipe(req.body);
+        res.status(201).json(recipe);
+    }
+    catch (error) {
+        sendError(500, 'Error adding the recipe to the database.');
+    }
+})
 
 //get shopping list
 

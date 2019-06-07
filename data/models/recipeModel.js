@@ -33,13 +33,13 @@ function getDish(id) {
         .select(['dishes.name'])
         .from('dishes')
         .where('dishes.id', id)
-        .then(getRecipesByDishId(id));
+        // .then(getRecipesByDishId(id));
 };
 
 //should return a list of all recipes in the database, including the dish they belong to.
 function getRecipes() {
     return db
-        .select(['recipes.name', 'dishes.name'])
+        .select(['recipes.name', 'dishes.name as dish'])
         .from('recipes')
         .join('dishes', 'dishes.id', 'recipes.dish_id')
 };
